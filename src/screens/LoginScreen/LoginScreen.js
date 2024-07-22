@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
-import TextInput from '../components/TextInput/TextInput';
-import Button from '../components/Button/Button';
+import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
+import CustomTextInput from '../../components/TextInput/TextInput';
+import Button from '../../components/Button/Button';
 import { useNavigation } from '@react-navigation/native';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import styles from './LoginScreen.styles';
 
 const LoginScreen = () => {
@@ -24,11 +24,11 @@ const LoginScreen = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Image source={require('../assets/logo.png')} style={styles.logo} />
+      <Image source={require('../../assets/logo.png')} style={styles.logo} />
       <Text style={styles.subtitle}>E-TİCARET PLATFORMU</Text>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Username</Text>
-        <TextInput
+        <CustomTextInput
           placeholder="Type Username Here"
           value={username}
           onChangeText={setUsername}
@@ -36,7 +36,7 @@ const LoginScreen = () => {
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Password</Text>
-        <TextInput
+        <CustomTextInput
           placeholder="Type Password Here"
           value={password}
           onChangeText={setPassword}

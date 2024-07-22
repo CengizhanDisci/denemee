@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, Text, FlatList, Image } from 'react-native';
 import styles from './OrderTrackingScreen.styles';
 
 const OrderTrackingScreen = ({ route }) => {
   const { order } = route.params;
 
-  const renderStatusItem = ({ item }) => (
+  const renderStatusItem = useCallback(({ item }) => (
     <View style={styles.statusItem}>
       <View style={styles.statusIndicator} />
       <View>
@@ -14,7 +14,7 @@ const OrderTrackingScreen = ({ route }) => {
         {item.description && <Text style={styles.statusDescription}>{item.description}</Text>}
       </View>
     </View>
-  );
+  ), []);
 
   return (
     <View style={styles.container}>
@@ -23,7 +23,7 @@ const OrderTrackingScreen = ({ route }) => {
         <Image source={{ uri: order.productImage }} style={styles.productImage} />
         <View style={styles.productDetails}>
           <Text style={styles.productTitle}>{order.productTitle}</Text>
-          <Text style={styles.productPrice}>{`$${order.productPrice}`}</Text>
+          <Text style={styles.productPrice}>${order.productPrice}</Text>
         </View>
       </View>
       <FlatList

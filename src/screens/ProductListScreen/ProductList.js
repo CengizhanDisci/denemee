@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, FlatList, TextInput, ScrollView, Image, TouchableOpacity, Text } from 'react-native';
-import { getProducts } from '../services/api';
+import { View, FlatList, Text, Image, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import { getProducts } from '../../services/api';
 import { useNavigation } from '@react-navigation/native';
-import { useFavorites } from '../context/FavoriteContext';
-import ProductCard from '../components/ProductCard/ProductCard';
-import { keyExtractor } from '../context/utils';
-import bannerImage from '../assets/banner.png';
+import { useFavorites } from '../../context/FavoriteContext';
+import bannerImage from '../../assets/banner.png';
+import Button from '../../components/Button/Button';
 import styles from './ProductList.styles';
 
 const ProductList = () => {
@@ -40,12 +39,22 @@ const ProductList = () => {
   };
 
   const renderProduct = ({ item }) => (
-    <ProductCard
-      product={item}
-      onPress={() => navigation.navigate('ProductDetails', { product: item })}
-      onFavoritePress={() => handleFavoritePress(item)}
-      isFavorite={isFavorite(item)}
-    />
+    <TouchableOpacity style={styles.product} onPress={() => navigation.navigate('ProductDetails', { product: item })}>
+      <View style={styles.imageContainer}>
+        <Image source={{ uri: item.thumbnail }} style={styles.image} />
+        <TouchableOpacity style={styles.favoriteButton} onPress={() => handleFavoritePress(item)}>
+          <Text style={styles.favoriteIcon}>{isFavorite(item) ? '❤️' : '🤍'}</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.textContainer}>
+        <Text style={styles.category}>{item.category}</Text>
+        <Text style={styles.title} numberOfLines={2}>{item.title}</Text>
+        <View style={styles.priceContainer}>
+          <Text style={styles.price}>${item.price}</Text>
+          {item.oldPrice && <Text style={styles.oldPrice}>${item.oldPrice}</Text>}
+        </View>
+      </View>
+    </TouchableOpacity>
   );
 
   const filteredProducts = products.filter(product =>
@@ -67,19 +76,19 @@ const ProductList = () => {
       />
       <View style={styles.categories}>
         {categories.map(category => (
-          <TouchableOpacity
+          <Button
             key={category}
-            style={styles.categoryButton}
+            title={category}
             onPress={() => navigation.navigate('CategoryProducts', { category })}
-          >
-            <Text style={styles.categoryText}>{category}</Text>
-          </TouchableOpacity>
+            style={styles.categoryButton}
+            textStyle={styles.categoryText}
+          />
         ))}
       </View>
       <Text style={styles.sectionTitle}>Most Popular</Text>
       <FlatList
         data={filteredProducts.slice(0, 5)}
-        keyExtractor={keyExtractor}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={renderProduct}
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -87,7 +96,7 @@ const ProductList = () => {
       <Text style={styles.sectionTitle}>Trending Now</Text>
       <FlatList
         data={filteredProducts.slice(5, 10)}
-        keyExtractor={keyExtractor}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={renderProduct}
         horizontal
         showsHorizontalScrollIndicator={false}

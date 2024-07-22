@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, FlatList, Text } from 'react-native';
-import { useFavorites } from '../context/FavoriteContext';
-import ProductCard from '../components/ProductCard/ProductCard';
-import { keyExtractor } from '../context/utils';
+import { View, Text, FlatList } from 'react-native';
+import { useFavorites } from '../../context/FavoriteContext';
+import ProductCard from '../../components/ProductCard/ProductCard';
+import { keyExtractor } from '../../context/utils';
 import styles from './WishlistScreen.styles';
 
 const WishlistScreen = ({ navigation }) => {

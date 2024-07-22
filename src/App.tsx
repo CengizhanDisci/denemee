@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { AuthProvider } from './context/AuthContext';
 import { FavoriteProvider } from './context/FavoriteContext';
 import { CartProvider } from './context/CartContext';
-import LoginScreen from './screens/LoginScreen';
+import LoginScreen from './screens/LoginScreen/LoginScreen';
 import MyTabs from './Navigation';
 
 

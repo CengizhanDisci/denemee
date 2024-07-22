@@ -115,6 +115,7 @@ export default StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 4,
     alignItems: 'center',
+    marginTop: 20,
   },
   addButtonText: {
     fontSize: 18,

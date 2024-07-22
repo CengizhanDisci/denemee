@@ -1,27 +1,29 @@
-import React, { useState } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity, FlatList } from 'react-native';
-import { useCart } from '../context/CartContext'; 
+import React, { useState, useCallback } from 'react';
+import { View, Text, Image, ScrollView, FlatList } from 'react-native';
+import CustomTextInput from '../../components/TextInput/TextInput';
+import Button from '../../components/Button/Button';
+import { useCart } from '../../context/CartContext';
 import styles from './ProductDetails.styles';
 
 const ProductDetails = ({ route }) => {
   const { product } = route.params;
-  const { addToCart } = useCart(); 
-
+  const { addToCart } = useCart();
+  
   const colors = product.colors || ['#000', '#555', '#888', '#bbb'];
   const images = product.images || [product.thumbnail];
 
   const [selectedSize, setSelectedSize] = useState('S');
   const [selectedColor, setSelectedColor] = useState(colors[0]);
 
-  const renderImageItem = ({ item }) => (
-    <TouchableOpacity style={styles.thumbnailContainer}>
+  const renderImageItem = useCallback(({ item }) => (
+    <Button style={styles.thumbnailContainer}>
       <Image source={{ uri: item }} style={styles.thumbnail} />
-    </TouchableOpacity>
-  );
+    </Button>
+  ), []);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = useCallback(() => {
     addToCart(product);
-  };
+  }, [addToCart, product]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -47,30 +49,34 @@ const ProductDetails = ({ route }) => {
         <View style={styles.sizeContainer}>
           <Text style={styles.label}>Size:</Text>
           {['S', 'M', 'L', 'XL'].map(size => (
-            <TouchableOpacity
+            <Button
               key={size}
-              style={[styles.sizeButton, selectedSize === size && styles.selectedSizeButton]}
+              title={size}
               onPress={() => setSelectedSize(size)}
-            >
-              <Text style={[styles.sizeText, selectedSize === size && styles.selectedSizeText]}>{size}</Text>
-            </TouchableOpacity>
+              style={[styles.sizeButton, selectedSize === size && styles.selectedSizeButton]}
+              textStyle={[styles.sizeText, selectedSize === size && styles.selectedSizeText]}
+            />
           ))}
         </View>
         <View style={styles.colorContainer}>
           <Text style={styles.label}>Color:</Text>
           {colors.map(color => (
-            <TouchableOpacity
+            <Button
               key={color}
-              style={[styles.colorButton, selectedColor === color && styles.selectedColorButton]}
+              title=""
               onPress={() => setSelectedColor(color)}
+              style={[styles.colorButton, selectedColor === color && styles.selectedColorButton]}
             >
               <View style={[styles.colorCircle, { backgroundColor: color }]} />
-            </TouchableOpacity>
+            </Button>
           ))}
         </View>
-        <TouchableOpacity style={styles.addButton} onPress={handleAddToCart}>
-          <Text style={styles.addButtonText}>Add to Cart</Text>
-        </TouchableOpacity>
+        <Button 
+          title="Add to Cart"
+          onPress={handleAddToCart}
+          style={styles.addButton}
+          textStyle={styles.addButtonText}
+        />
       </View>
     </ScrollView>
   );

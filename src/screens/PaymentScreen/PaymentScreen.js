@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, Image } from 'react-native';
-import { useCart } from '../context/CartContext';
-import { placeOrder } from '../services/orderAPI';
+import React, { useState, useCallback } from 'react';
+import { View, Text, FlatList, Image } from 'react-native';
+import CustomTextInput from '../../components/TextInput/TextInput';
+import Button from '../../components/Button/Button';
+import { useCart } from '../../context/CartContext';
+import { placeOrder } from '../../services/orderAPI';
 import styles from './PaymentScreen.styles';
 
 const PaymentScreen = ({ navigation }) => {
@@ -12,7 +14,7 @@ const PaymentScreen = ({ navigation }) => {
 
   const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
-  const handlePayment = async () => {
+  const handlePayment = useCallback(async () => {
     if (!cardNumber || !expiryDate || !cvv) {
       alert('All payment fields are required.');
       return;
@@ -42,18 +44,18 @@ const PaymentScreen = ({ navigation }) => {
       console.error('Error in handlePayment:', error);
       alert('Failed to place the order.');
     }
-  };
+  }, [cardNumber, expiryDate, cvv, cart, clearCart, navigation, totalPrice]);
 
-  const renderItem = ({ item }) => (
+  const renderItem = useCallback(({ item }) => (
     <View style={styles.itemContainer}>
       <Image source={{ uri: item.thumbnail }} style={styles.productImage} />
       <View style={styles.itemDetails}>
         <Text style={styles.productTitle}>{item.title}</Text>
-        <Text style={styles.productPrice}>{`$${item.price.toFixed(2)}`}</Text>
+        <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
         <Text style={styles.productQuantity}>Quantity: {item.quantity}</Text>
       </View>
     </View>
-  );
+  ), []);
 
   return (
     <View style={styles.container}>
@@ -65,32 +67,27 @@ const PaymentScreen = ({ navigation }) => {
       />
       <View style={styles.totalContainer}>
         <Text style={styles.totalLabel}>Total Price:</Text>
-        <Text style={styles.totalPrice}>{`$${totalPrice.toFixed(2)}`}</Text>
+        <Text style={styles.totalPrice}>${totalPrice.toFixed(2)}</Text>
       </View>
-      <TextInput
+      <CustomTextInput
         placeholder="Card Number"
-        style={styles.input}
         value={cardNumber}
         onChangeText={setCardNumber}
         keyboardType="numeric"
       />
-      <TextInput
+      <CustomTextInput
         placeholder="Expiry Date (MM/YY)"
-        style={styles.input}
         value={expiryDate}
         onChangeText={setExpiryDate}
       />
-      <TextInput
+      <CustomTextInput
         placeholder="CVV"
-        style={styles.input}
         value={cvv}
         onChangeText={setCvv}
         secureTextEntry
         keyboardType="numeric"
       />
-      <TouchableOpacity style={styles.payButton} onPress={handlePayment}>
-        <Text style={styles.payButtonText}>Pay Now</Text>
-      </TouchableOpacity>
+      <Button title="Pay Now" onPress={handlePayment} />
     </View>
   );
 };

@@ -1,6 +1,7 @@
-import React from 'react';
-import { View, FlatList, Text, TouchableOpacity, ImageBackground } from 'react-native';
+import React, { useCallback } from 'react';
+import { View, Text, FlatList, ImageBackground, Alert } from 'react-native';
 import styles from './CouponsScreen.styles';
+import Button from '../../components/Button/Button';
 
 const coupons = [
   {
@@ -18,17 +19,27 @@ const coupons = [
 ];
 
 const CouponsScreen = () => {
-  const renderCoupon = ({ item }) => (
-    <TouchableOpacity style={styles.couponContainer}>
+  const applyCoupon = useCallback((code) => {
+    Alert.alert(`Coupon ${code} applied!`);
+  }, []);
+
+  const renderCoupon = useCallback(({ item }) => (
+    <View style={styles.couponContainer}>
       <ImageBackground source={item.background} style={styles.backgroundImage} imageStyle={styles.backgroundImageStyle}>
         <View style={styles.overlay} />
         <View style={styles.textContainer}>
           <Text style={styles.code}>{item.code}</Text>
           <Text style={styles.description}>{item.description}</Text>
+          <Button
+            title="Apply Coupon"
+            onPress={() => applyCoupon(item.code)}
+            style={styles.applyButton}
+            textStyle={styles.applyButtonText}
+          />
         </View>
       </ImageBackground>
-    </TouchableOpacity>
-  );
+    </View>
+  ), [applyCoupon]);
 
   return (
     <View style={styles.container}>

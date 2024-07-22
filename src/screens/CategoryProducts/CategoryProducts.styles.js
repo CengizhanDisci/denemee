@@ -25,6 +25,7 @@ export default StyleSheet.create({
     position: 'absolute',
     top: 8,
     right: 8,
+    backgroundColor: 'transparent',
   },
   textContainer: {
     padding: 8,
